@@ -9,6 +9,8 @@ var searchRouter = require("./routes/search");
 
 var indexer = require("./lib/indexer");
 
+require("dotenv").config();
+
 indexer.buildIndex();
 
 var app = express();
