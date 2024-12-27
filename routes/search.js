@@ -16,7 +16,7 @@ router.get("/", function (req, res, next) {
     let highlightedContent = indexer.readContent(fileName);
 
     words.forEach((word) => {
-      const wordRegex = new RegExp(`(${word})`, "gi");
+      const wordRegex = new RegExp(`\\b(${word})\\b`, "gi");
       highlightedContent = highlightedContent.replace(wordRegex, "<b>$1</b>");
     });
 
