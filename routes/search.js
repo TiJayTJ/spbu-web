@@ -1,13 +1,31 @@
 var express = require("express");
+var indexer = require("../lib/indexer");
+
 var router = express.Router();
 
-/* GET search. */
 router.get("/", function (req, res, next) {
-  const query = req.query.query || "default query"; // Default
-  const results = [...Array(10)].map((_, index) => ({
-    title: `Результат ${index + 1}`,
-    description: "Описание <b>asdfasafs</b>  ${index + 1}",
-  }));
+  const query = req.query.query || "";
+  const fileEntries = indexer.search(query);
+
+  const words = query
+    .toLowerCase()
+    .split(/\s+/)
+    .filter((word) => word);
+
+  const results = fileEntries.map((fileName) => {
+    let highlightedContent = indexer.readContent(fileName);
+
+    words.forEach((word) => {
+      const wordRegex = new RegExp(`(${word})`, "gi");
+      highlightedContent = highlightedContent.replace(wordRegex, "<b>$1</b>");
+    });
+
+    return {
+      title: fileName,
+      content: highlightedContent,
+    };
+  });
+
   res.render("search", { results, query });
 });
 
