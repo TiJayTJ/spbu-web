@@ -16,7 +16,11 @@ router.get("/", function (req, res, next) {
     let highlightedContent = indexer.readContent(fileName);
 
     words.forEach((word) => {
-      const wordRegex = new RegExp(`\\b(${word})\\b`, "gi");
+      // Регулярное выражение для целых слов, включая русские буквы
+      const wordRegex = new RegExp(
+        `(?<![\\p{L}\\p{M}\\p{N}_])(${word})(?![\\p{L}\\p{M}\\p{N}_])`,
+        "giu"
+      );
       highlightedContent = highlightedContent.replace(wordRegex, "<b>$1</b>");
     });
 
